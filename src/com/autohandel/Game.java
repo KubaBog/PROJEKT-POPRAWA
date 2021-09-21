@@ -29,6 +29,8 @@ public class Game {
         this.mechanics.add( new Mechanic("Adrian","Kowalski",0.5,0.8,0.02));
         this.clients = ClientGenerator.generateMany(6);
         this.cars = CarGenerator.generateMany(14);
+        this.clients = ClientGenerator.generateMany(4);
+        this.cars = CarGenerator.generateMany(10);
         this.player1 = new Player(10000000);
         this.close = false;
         StateManager.registerState(new Main(this));
@@ -40,6 +42,21 @@ public class Game {
         StateManager.registerState(new HistoryOfRepair(this));
         StateManager.registerState(new Selling(this));
         StateManager.registerState(new Repair(this));
+        StateManager.registerState(new Ads(this));
 
         StateManager.changeState("Main");
     }
+
+    public void update(){
+        if (this.player1.balance > 20000000 ){
+            System.out.println("\n\n\n\n    YOU WON IN " + this.player1.move + " MOVES\n\n");
+            this.close = true;
+        }
+        this.player1.printHeader();
+        StateManager.update();
+        //TODO
+    }
+
+
+
+}

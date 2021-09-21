@@ -1,52 +1,19 @@
 package com.autohandel.state;
+
 import com.autohandel.Game;
 import com.autohandel.people.Client;
+import com.autohandel.people.ClientGenerator;
 import com.autohandel.vehicles.Car;
+import com.autohandel.vehicles.CarGenerator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-
-import static java.lang.Float.parseFloat;
-import static java.lang.Integer.parseInt;
-public class Selling {
-    public int price =0;
-    public Selling(Game currentGame) {
-        super(currentGame);
-    }
-
-    public String getPriceAsString(){
-        return String.format("%.2f",(float)(this.price/100));
-    }
-
-    @Override
-    public void init(){
-        if(this.indexOfCar != -1 && this.indexOfClient !=-1) {
-
-//            Car car  =this.currentGame.cars.get(this.indexOfCar);
-//            Client client  =this.currentGame.clients.get(this.indexOfClient);
-//            if (car.brokenParts.size() ==0 || car.brokenParts.size() ==1 && car.brokenParts.contains("suspension") && client.acceptBroken){
-//                if (car.value < client.money){
-//
-//                }else{
-//                    this.addMessage("Sell unsuccessful: Client doesn't have enough money");
-//                }
-//            }else{
-//                this.addMessage("Sell unsuccessful: car is broken");
-//            }
-            if (price ==0) {
-                this.addMessage("   input price");
-            }
-            this.addMenuItem("Back", "q");
-        }else{
-            this.price =0;
-        }
-
-
-    }
+@ -51,14 +53,14 @@ public class Selling extends State{
 
     @Override
     public void update() {
+
+
         printMenu();
         String userData = this.getUserInput();
         if (userData.equals("q"))
@@ -55,26 +22,23 @@ public class Selling {
             if (price>0){
 
             }else{
+            if (!(price>0)){
                 int price_int = parseInt(userData);
                 float price_float = parseFloat(userData);
                 if (price_float != price_int) {
-                    this.price = (int)(price_float*100);
-                }else {
-                    this.price = price_int*100;
-                }
-                this.messages.clear();
-                Car car  =this.currentGame.cars.get(this.indexOfCar);
-                Client client  =this.currentGame.clients.get(this.indexOfClient);
-                if (car.brokenParts.size() ==0 || car.brokenParts.size() ==1 && car.brokenParts.contains("suspension") && client.acceptBroken){
-                    if (this.price <= client.money){
+@ -74,63 +76,67 @@
                         if (client.likes.contains(car.model.brandName)){
                             car.ownership = Car.Ownership.Client;
                             this.currentGame.player1.balance += (this.price*0.98);
+                            car.costOfCleaning += (this.price*0.02);
                             this.currentGame.player1.myCars.remove(car);
                             this.currentGame.player1.move +=1;
-                            this.currentGame.player1.historyOfTransactions.add("Sold \'"+ car.model.brandName + " " + car.model.modelName + "\' for "+ this.getPriceAsString());
                             this.currentGame.player1.historyOfTransactions.add("Sold '"+ car.model.brandName + " " + car.model.modelName + "' for "+ this.getPriceAsString() + "PLN");
 
+                            this.currentGame.clients.add(ClientGenerator.generate());
+                            this.currentGame.clients.add(ClientGenerator.generate());
+                            this.currentGame.clients.remove(client);
+//                            this.currentGame.cars.add(CarGenerator.generate());
                             StateManager.changeState("Main");
                         }else{
                             this.addMessage("Sell unsuccessful: Client doesn't like brand of Car");
@@ -97,4 +61,37 @@ public class Selling {
         String s = "";
         System.out.print(" Choose option: ");
         boolean is_legal = false;
+        while (s.length() <1 && !is_legal){
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                s = reader.readLine();
+                for (String character : menuActions){
+                    if (s.toLowerCase().startsWith(character)){
+                        is_legal = true;
+                        break;
+                    }
+                }
+                if (s.matches("[0-9]+"))
+                {
+                    is_legal = true;
+                    break;
+                }
+                if (!is_legal){
+                    System.out.println(" Wrong Input");
+                    System.out.print(" Choose option: ");
+                    s = "";
+                }
+            }catch (IOException e){
+                System.out.print("Wrong Input");
+                System.out.print(" Choose option: ");
+                s = "";
+            }
+
+        }
+        return s.toLowerCase();
+    }
+
+
+
 }
+

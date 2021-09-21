@@ -1,29 +1,29 @@
 package com.autohandel.state;
+
 import com.autohandel.Game;
-public class Main {
+
+public class Main extends State{
     public Main(Game currentGame) {
         super(currentGame);
-        this.addMenuItem("View cars for sale", "1");
-        this.addMenuItem("View cars in garage", "2");
-        this.addMenuItem("View clients", "3");
-        this.addMenuItem("View transaction history", "4");
-        this.addMenuItem("Quit", "q");
+
     }
 
     @Override
     public void init(){
-
+        this.addMenuItem("View cars for sale", "1");
+        this.addMenuItem("View cars in garage", "2");
+        this.addMenuItem("View clients", "3");
+        this.addMenuItem("View transaction history", "4");
+        this.addMenuItem("Buy Ads", "5");
+        this.addMenuItem("Quit", "q");
     }
     @Override
-    public void update(){
-        printMenu();
-        String userData = this.getUserInput();
-        switch (userData){
-            case "1" :
-                StateManager.changeState("CarsForSale");
+@ -33,11 +34,14 @@
+            case "4" :
+                StateManager.changeState("Transactions");
                 break;
-            case "2" :
-                StateManager.changeState("MyCars");
+            case "5" :
+                StateManager.changeState("Ads");
                 break;
             case "q" :
                 this.currentGame.close = true;

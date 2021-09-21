@@ -1,4 +1,5 @@
 package com.autohandel.state;
+
 import com.autohandel.Game;
 import com.autohandel.people.Mechanic;
 import com.autohandel.vehicles.Car;
@@ -8,7 +9,8 @@ import com.autohandel.vehicles.CarPart;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Repair {
+public class Repair extends State {
+
     public HashMap<String,Mechanic> mechanics = new HashMap<>();
 
     public Repair(Game currentGame) {
@@ -70,6 +72,7 @@ public class Repair {
             }
             this.currentGame.player1.historyOfTransactions.add("Repair of "+ carpart.name +" costed " + String.format("%.2f",(float)((carpart.costOfRepair/100)*mechanic.priceMultiplier))+ "PLN");
             this.currentGame.player1.balance -= ((carpart.costOfRepair)*mechanic.priceMultiplier);
+            car.costOfCleaning += ((carpart.costOfRepair)*mechanic.priceMultiplier);
             this.currentGame.player1.move +=1;
             StateManager.changeState("Main");
 
@@ -79,5 +82,5 @@ public class Repair {
 
 
     }
-
 }
+
