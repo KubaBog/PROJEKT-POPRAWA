@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-@ -14,15 +15,18 @@ public class Game {
+    public int turn;
+    public List<Car> cars;
     public List<Client> clients;
     public List<Mechanic> mechanics;
     public Player player1;
@@ -29,3 +30,8 @@ public class Game {
     }
 
     public void update(){
+
+        player1.printHeader();
+        
+    }
+}
